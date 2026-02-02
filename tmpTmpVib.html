@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="ru" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Время действовать — Предвыборная кампания</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'Manrope', sans-serif;
+    }
+    
+    :root {
+      --deep-blue: #1B1FAF;
+      --bright-orange: #FF7A00;
+      --white: #FFFFFF;
+      --black: #0A0A0A;
+    }
+    
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .slide-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    
+    .slide-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .slide-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    
+    .slide-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .scale-in {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    .scale-in.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .btn-primary {
+      background: var(--bright-orange);
+      color: white;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255, 122, 0, 0.4);
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    
+    .btn-secondary {
+      background: var(--deep-blue);
+      color: white;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(27, 31, 175, 0.4);
+    }
+    
+    .team-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: white;
+    }
+    
+    .team-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 25px 60px rgba(27, 31, 175, 0.2);
+    }
+    
+    .team-card:hover .card-avatar {
+      transform: scale(1.1);
+    }
+    
+    .card-avatar {
+      transition: transform 0.4s ease;
+    }
+    
+    .change-card {
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--bright-orange);
+    }
+    
+    .change-card:hover {
+      transform: translateX(10px);
+      background: rgba(255, 122, 0, 0.05);
+    }
+    
+    .geometric-bg {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .geometric-bg::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 60%;
+      height: 200%;
+      background: var(--bright-orange);
+      transform: rotate(15deg);
+      opacity: 0.1;
+      z-index: 0;
+    }
+    
+    .hero-geometric::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 50%;
+      height: 150%;
+      background: var(--deep-blue);
+      transform: rotate(-12deg);
+      opacity: 0.08;
+      z-index: 0;
+    }
+    
+    .floating-shape {
+      position: absolute;
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+    
+    .text-gradient {
+      background: linear-gradient(135deg, var(--deep-blue), var(--bright-orange));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .section-divider {
+      height: 6px;
+      background: linear-gradient(90deg, var(--deep-blue), var(--bright-orange));
+    }
+    
+    .about-item {
+      transition: all 0.3s ease;
+      padding-left: 1.5rem;
+      border-left: 3px solid transparent;
+    }
+    
+    .about-item:hover {
+      border-left-color: var(--bright-orange);
+      padding-left: 2rem;
+    }
+    
+    .stat-number {
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .details-btn {
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 0.875rem;
+      line-height: 1;
+      padding-top: 0.15rem;
+      padding-bottom: 0.15rem;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-white text-gray-900 overflow-x-hidden">
+  <div id="app-wrapper" class="w-full h-full overflow-auto"><!-- Hero Section -->
+   <section class="min-h-screen geometric-bg hero-geometric flex items-center justify-center relative" style="background: linear-gradient(135deg, #1B1FAF 0%, #0D0F6B 100%);">
+    <div class="floating-shape" style="width: 300px; height: 300px; background: rgba(255,122,0,0.15); top: 10%; left: 5%; animation-delay: 0s;"></div>
+    <div class="floating-shape" style="width: 200px; height: 200px; background: rgba(255,255,255,0.08); top: 60%; right: 10%; animation-delay: 2s;"></div>
+    <div class="floating-shape" style="width: 150px; height: 150px; background: rgba(255,122,0,0.1); bottom: 20%; left: 20%; animation-delay: 4s;"></div>
+    <div class="container mx-auto px-6 text-center relative z-10">
+     <div class="fade-in">
+      <h1 id="main-slogan" class="text-6xl md:text-8xl lg:text-9xl font-extrabold text-white mb-8 tracking-tight leading-none">Время<br>
+       действовать.</h1>
+      <div class="w-32 h-2 bg-orange-500 mx-auto mb-8" style="background: var(--bright-orange);"></div>
+      <p class="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-12 font-medium">Предвыборная кампания на пост Председателя Студсовета ФПМИ</p><a href="https://t.me/uzeeex" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-3 px-10 py-5 rounded-full text-lg font-bold">
+       <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24">
+        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.324-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.155.234.171.348.016.114.035.333.02.513z" />
+       </svg> Написать мне </a>
+     </div>
+    </div>
+   </section><!-- Section 0: Основная идеология -->
+   <section class="py-24 lg:py-32 bg-white relative">
+    <div class="container mx-auto px-6">
+     <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div class="slide-left"><span class="inline-block px-4 py-2 rounded-full text-sm font-bold mb-6" style="background: rgba(27,31,175,0.1); color: var(--deep-blue);">ИДЕОЛОГИЯ</span>
+       <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 leading-tight">Представление<br><span class="text-gradient">интересов студентов</span></h2>
+       <p id="ideology-text" class="text-xl text-gray-600 leading-relaxed mb-8">Я считаю, что главная задача председателя - представление интересов студентов, ведь именно он может выносить глобальные проблемы сразу не только на уровень дирекции, но и на уровень МКИ, развивать систему Студсовета и привносить новые глобальные изменения. Привлекаем молодых ребят на руководящие должности, чтобы принести новый взгляд и свежие мысли в Студсовет так, чтобы мы могли напрямую решать большинство проблем студентов</p>
+       <div class="flex gap-4">
+        <div class="text-center">
+         <div class="stat-number text-gradient">
+          100%
+         </div>
+         <div class="text-sm text-gray-500 font-medium">
+          ОТКРЫТОСТЬ
+         </div>
+        </div>
+        <div class="w-px bg-gray-200"></div>
+        <div class="text-center">
+         <div class="stat-number text-gradient">
+          24/7
+         </div>
+         <div class="text-sm text-gray-500 font-medium">
+          НА СВЯЗИ
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="slide-right">
+       <div class="relative">
+        <div class="absolute -inset-4 rounded-3xl" style="background: linear-gradient(135deg, rgba(27,31,175,0.1), rgba(255,122,0,0.1));"></div>
+        <div class="relative bg-white rounded-2xl p-8 shadow-2xl">
+         <div class="space-y-6">
+          <div class="flex items-start gap-4">
+           <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--bright-orange);">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+           </div>
+           <div>
+            <h4 class="font-bold text-lg">Молодая команда</h4>
+           </div>
+          </div>
+          <div class="flex items-start gap-4">
+           <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--deep-blue);">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+           </div>
+           <div>
+            <h4 class="font-bold text-lg">Прямое решение проблем</h4>
+           </div>
+          </div>
+          <div class="flex items-start gap-4">
+           <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--bright-orange);">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+           </div>
+           <div>
+            <h4 class="font-bold text-lg">Реальные действия</h4>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+   <div class="section-divider"></div><!-- Section 1: О себе -->
+   <section class="py-24 lg:py-32 relative" style="background: #F8F9FF;">
+    <div class="container mx-auto px-6">
+     <div class="text-center mb-16 fade-in"><span class="inline-block px-4 py-2 rounded-full text-sm font-bold mb-6" style="background: rgba(255,122,0,0.1); color: var(--bright-orange);">О КАНДИДАТЕ</span>
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold">Кто я <span class="text-gradient">такой?</span></h2>
+     </div>
+     <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      <div><img src="candidate_photo.jpg" alt="Photo of the candidate" class="rounded-xl shadow-lg mb-8 w-full max-w-md mx-auto"></div>
+      <div>
+       <ul class="space-y-4">
+        <li class="bg-white rounded-xl p-6 shadow-lg font-semibold text-lg">Финалист школьной лиги дебатов</li>
+        <li class="bg-white rounded-xl p-6 shadow-lg font-semibold text-lg">Дважды ответственный за этаж в 2ке</li>
+        <li class="bg-white rounded-xl p-6 shadow-lg font-semibold text-lg">Разложил по полочкам инструментарий</li>
+        <li class="bg-white rounded-xl p-6 shadow-lg font-semibold text-lg">Куратор 25-26</li>
+        <li class="bg-white rounded-xl p-6 shadow-lg font-semibold text-lg">Секретарь инициативного направления</li>
+        <li class="bg-white rounded-xl p-6 shadow-lg font-semibold text-lg">Организатор выхода активистов</li>
+        <li class="bg-white rounded-xl p-6 shadow-lg font-semibold text-lg">Активист ПОНа, ХОЗа, Инициативки, Секретариата</li>
+        <li class="bg-white rounded-xl p-6 shadow-lg font-semibold text-lg">Открыт к любым вопросам и предложениям</li>
+       </ul>
+      </div>
+     </div>
+    </div>
+   </section>
+   <!-- Team Section -->
+   <section class="py-24 lg:py-32 relative" style="background: linear-gradient(135deg, #F8F9FF 0%, #FFFFFF 100%);">
+    <div class="container mx-auto px-6">
+     <div class="text-center mb-16 fade-in"><span class="inline-block px-4 py-2 rounded-full text-sm font-bold mb-6" style="background: rgba(27,31,175,0.1); color: var(--deep-blue);">КОМАНДА</span>
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold">Наша <span class="text-gradient">команда</span></h2>
+     </div>
+     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="team-card scale-in rounded-2xl p-6 shadow-xl" style="transition-delay: 0.1s;">
+       <div class="card-avatar w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden" style="background: var(--deep-blue);">
+        <img src="vladimir.jpg" alt="Владимир Кириллов" class="w-full h-full object-cover">
+       </div>
+       <h3 class="text-xl font-bold text-center mb-2">Владимир Кириллов</h3>
+       <p class="text-gray-500 text-center mb-4">Папа 7ки</p>
+       <a href="http://t.me/skidle613" target="_blank" rel="noopener noreferrer" class="btn-secondary block text-center py-3 rounded-full font-medium">Написать</a>
+      </div>
+      <div class="team-card scale-in rounded-2xl p-6 shadow-xl" style="transition-delay: 0.2s;">
+       <div class="card-avatar w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden" style="background: var(--bright-orange);">
+        <img src="viktoriya.jpg" alt="Виктория Попова" class="w-full h-full object-cover">
+       </div>
+       <h3 class="text-xl font-bold text-center mb-2">Виктория Попова</h3>
+       <p class="text-gray-500 text-center mb-4">Готова убить за интересы каждого</p>
+       <a href="http://t.me/karmaxxkoma" target="_blank" rel="noopener noreferrer" class="btn-secondary block text-center py-3 rounded-full font-medium">Написать</a>
+      </div>
+      <div class="team-card scale-in rounded-2xl p-6 shadow-xl" style="transition-delay: 0.3s;">
+       <div class="card-avatar w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden" style="background: var(--deep-blue);">
+        <img src="alexei.jpg" alt="Алексей Сафонов" class="w-full h-full object-cover">
+       </div>
+       <h3 class="text-xl font-bold text-center mb-2">Алексей Сафонов</h3>
+       <p class="text-gray-500 text-center mb-4">Будущий папа 2ки</p>
+       <a href="http://t.me/a1exaf" target="_blank" rel="noopener noreferrer" class="btn-secondary block text-center py-3 rounded-full font-medium">Написать</a>
+      </div>
+      <div class="team-card scale-in rounded-2xl p-6 shadow-xl" style="transition-delay: 0.4s;">
+       <div class="card-avatar w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden" style="background: var(--bright-orange);">
+        <img src="andrew.jpg" alt="Андрей Шепелявый" class="w-full h-full object-cover">
+       </div>
+       <h3 class="text-xl font-bold text-center mb-2">Андрей Шепелявый</h3>
+       <p class="text-gray-500 text-center mb-4">Серый кардинал, темный властелин и белый негр</p>
+       <a href="http://t.me/ashepelgreat" target="_blank" rel="noopener noreferrer" class="btn-secondary block text-center py-3 rounded-full font-medium">Написать</a>
+      </div>
+      <div class="team-card scale-in rounded-2xl p-6 shadow-xl" style="transition-delay: 0.5s;">
+       <div class="card-avatar w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden" style="background: var(--deep-blue);">
+        <img src="maxim.jpg" alt="Максим Зубаха" class="w-full h-full object-cover">
+       </div>
+       <h3 class="text-xl font-bold text-center mb-2">Максим Зубаха</h3>
+       <p class="text-gray-500 text-center mb-4">Завербовали кунг-фу панду к себе в команду. Хз. Рилсы снимает вроде.</p>
+       <a href="http://t.me/lvbealr" target="_blank" rel="noopener noreferrer" class="btn-secondary block text-center py-3 rounded-full font-medium">Написать</a>
+      </div>
+      <div class="team-card scale-in rounded-2xl p-6 shadow-xl" style="transition-delay: 0.6s;">
+       <div class="card-avatar w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden" style="background: var(--bright-orange);">
+        <img src="usuf.jpg" alt="Юсуф Нагуманов" class="w-full h-full object-cover">
+       </div>
+       <h3 class="text-xl font-bold text-center mb-2">Юсуф Нагуманов</h3>
+       <p class="text-gray-500 text-center mb-4">Заряженный пекус. Процесс зарядки ему не понравился. “Зачем мне батарейка в жопе?!” - говорит пострадавший.</p>
+       <a href="http://t.me/Coolratiolemma" target="_blank" rel="noopener noreferrer" class="btn-secondary block text-center py-3 rounded-full font-medium">Написать</a>
+      </div>
+      <div class="team-card scale-in rounded-2xl p-6 shadow-xl" style="transition-delay: 0.7s;">
+       <div class="card-avatar w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden" style="background: var(--deep-blue);">
+        <img src="roman.jpg" alt="Роман Мясников" class="w-full h-full object-cover">
+       </div>
+       <h3 class="text-xl font-bold text-center mb-2">Роман Мясников</h3>
+       <p class="text-gray-500 text-center mb-4">1 курс ИВТсп. Экс 1 курс ПМИ. Его отец играл в Уральских Пельменях.</p>
+       <a href="http://t.me/Sumusupusumusu" target="_blank" rel="noopener noreferrer" class="btn-secondary block text-center py-3 rounded-full font-medium">Написать</a>
+      </div>
+      <div class="team-card scale-in rounded-2xl p-6 text-center flex flex-col items-center justify-center border-2 border-dashed border-gray-300" style="transition-delay: 0.8s; background: transparent;">
+       <div class="text-5xl mb-4 opacity-50">
+        🤝
+       </div>
+       <p class="text-gray-500 font-medium">Ты можешь быть здесь</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- Section 3: Основные изменения -->
+   <section class="py-24 lg:py-32 bg-white relative geometric-bg">
+    <div class="container mx-auto px-6 relative z-10">
+     <div class="text-center mb-16 fade-in"><span class="inline-block px-4 py-2 rounded-full text-sm font-bold mb-6" style="background: rgba(27,31,175,0.1); color: var(--deep-blue);">ПРОГРАММА</span>
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold">Что <span class="text-gradient">изменим?</span></h2>
+     </div>
+     <div class="max-w-4xl mx-auto space-y-6">
+      <div class="change-card fade-in bg-white rounded-xl p-6 shadow-lg" style="transition-delay: 0.1s;">
+       <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--deep-blue);"><span class="text-2xl">🎯</span>
+        </div>
+        <div>
+         <h3 class="font-bold text-xl mb-2">Усиление представительства</h3>
+         <p class="text-gray-600">Увеличение функций представительства в целях реализации интересов студентов напрямую. <a href="https://t.me/c/3563125774/8" class="btn-primary details-btn ml-2 px-3 py-1 rounded text-white text-sm">Подробнее</a></p>
+        </div>
+       </div>
+      </div>
+      <div class="change-card fade-in bg-white rounded-xl p-6 shadow-lg" style="transition-delay: 0.2s;">
+       <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--bright-orange);"><span class="text-2xl">🏋️</span>
+        </div>
+        <div>
+         <h3 class="font-bold text-xl mb-2">Новые пространства и комфорт</h3>
+         <p class="text-gray-600">Открытие новых помещений (тренажерка, игровая в 12ке) и развитие старых (инструментарии, коворкинг-зона в 7ке, боталки). Установка фильтров для воды в общаги. Переобустройство стиралок, кухонь, душей. <a href="https://t.me/c/3563125774/5" class="btn-primary details-btn ml-2 px-3 py-1 rounded text-white text-sm">Подробнее</a></p>
+        </div>
+       </div>
+      </div>
+      <div class="change-card fade-in bg-white rounded-xl p-6 shadow-lg" style="transition-delay: 0.3s;">
+       <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--bright-orange);"><span class="text-2xl">📚</span>
+        </div>
+        <div>
+         <h3 class="font-bold text-xl mb-2">Стабильный доп.обр</h3>
+         <p class="text-gray-600">Добьемся стабильной работы доп. обра, в частности: доп. семы, расшары, разботы для ИВТф-а и создания учебных материалов(TeX и записи лекций) для курсов иностранцев. <a href="https://t.me/c/3563125774/7" class="btn-primary details-btn ml-2 px-3 py-1 rounded text-white text-sm">Подробнее</a></p>
+        </div>
+       </div>
+      </div>
+      <div class="change-card fade-in bg-white rounded-xl p-6 shadow-lg" style="transition-delay: 0.4s;">
+       <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--deep-blue);"><span class="text-2xl">📊</span>
+        </div>
+        <div>
+         <h3 class="font-bold text-xl mb-2">Аналитика и развитие</h3>
+         <p class="text-gray-600">Анализ недостатков курсов и их развитие с помощью нового органа - Сектора Аналитики Учебы, сотрудничество с внешними источниками статистики. <a href="https://t.me/c/3563125774/6" class="btn-primary details-btn ml-2 px-3 py-1 rounded text-white text-sm">Подробнее</a></p>
+        </div>
+       </div>
+      </div>
+      <div class="change-card fade-in bg-white rounded-xl p-6 shadow-lg" style="transition-delay: 0.5s;">
+       <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--bright-orange);"><span class="text-2xl">👔</span>
+        </div>
+        <div>
+         <h3 class="font-bold text-xl mb-2">Кадровые перестановки</h3>
+         <p class="text-gray-600">Кадровые перестановки президиума - смена Главы Инициативного направления и Казначея Студсовета.</p>
+        </div>
+       </div>
+      </div>
+      <div class="change-card fade-in bg-white rounded-xl p-6 shadow-lg" style="transition-delay: 0.6s;">
+       <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background: var(--deep-blue);"><span class="text-2xl">🏆</span>
+        </div>
+        <div>
+         <h3 class="font-bold text-xl mb-2">Межфакультетские ивенты</h3>
+         <p class="text-gray-600">Проведение совместных спортивных, киберспортивных, интеллектуальных соревнований с другими ФШ. Сотрудничество с МКИ и другими студсоветами для реализации новых совместных ивентов. Совместные мат. бои, хакатоны, командные и индивидуальные турниры.</p>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="text-center mt-12 fade-in"><a href="https://t.me/uzeeex" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold"> Для более подробного изучения предвыборной кампании - перейди в ТГК. 
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+       </svg></a>
+     </div>
+    </div>
+   </section><!-- Section 4: Информация и обратная связь -->
+   <section class="py-24 lg:py-32 relative" style="background: linear-gradient(135deg, var(--deep-blue) 0%, #0D0F6B 100%);">
+    <div class="container mx-auto px-6 text-center relative z-10">
+     <div class="fade-in max-w-3xl mx-auto">
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-8">Остались <span style="color: var(--bright-orange);">вопросы?</span></h2>
+      <p class="text-xl text-white/70 mb-12">Пишите по любым вопросам — я всегда на связи</p>
+      <div class="flex flex-col sm:flex-row gap-6 justify-center"><a id="telegram-link" href="https://t.me/uzeeex" target="_blank" rel="noopener noreferrer" class="btn-primary inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full text-lg font-bold">
+        <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24">
+         <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.324-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.015 3.333-1.386 4.025-1.627 4.477-1.635.099-.002.321.023.465.141.121.1.155.234.171.348.016.114.035.333.02.513z" />
+        </svg><span id="telegram-handle">Написать @uzeeex</span> </a>
+      </div>
+      <div class="mt-16 pt-8 border-t border-white/10">
+       <p class="text-white/40 text-sm">© 2026 Предвыборная кампания ФПМИ МФТИ</p>
+      </div>
+     </div>
+    </div>
+   </section>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_slogan: 'Время действовать.',
+      ideology_text: 'Я считаю, что главная задача председателя — представление интересов студентов. Привлекаем молодых ребят на рук должности, чтобы принести новый взгляд в Студсовет так, чтобы мы могли напрямую решать большинство проблем студентов.',
+      telegram_handle: '@uzeeex',
+      background_color: '#1B1FAF',
+      accent_color: '#FF7A00',
+      text_color: '#FFFFFF',
+      card_color: '#FFFFFF',
+      secondary_text: '#6B7280'
+    };
+    
+    let config = { ...defaultConfig };
+    
+    // Scroll animation observer
+    function initScrollAnimations() {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+      
+      document.querySelectorAll('.fade-in, .slide-left, .slide-right, .scale-in').forEach(el => {
+        observer.observe(el);
+      });
+    }
+    
+    // Apply configuration to UI
+    async function onConfigChange(cfg) {
+      config = { ...defaultConfig, ...cfg };
+      
+      const mainSlogan = document.getElementById('main-slogan');
+      if (mainSlogan) {
+        const sloganText = config.main_slogan || defaultConfig.main_slogan;
+        const words = sloganText.split(' ');
+        if (words.length > 1) {
+          mainSlogan.innerHTML = words.slice(0, -1).join(' ') + '<br>' + words[words.length - 1];
+        } else {
+          mainSlogan.textContent = sloganText;
+        }
+      }
+      
+      const ideologyText = document.getElementById('ideology-text');
+      if (ideologyText) {
+        ideologyText.textContent = config.ideology_text || defaultConfig.ideology_text;
+      }
+      
+      const telegramHandle = document.getElementById('telegram-handle');
+      if (telegramHandle) {
+        telegramHandle.textContent = 'Написать ' + (config.telegram_handle || defaultConfig.telegram_handle);
+      }
+    }
+    
+    // Map to capabilities for color/font editing
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => {
+              cfg.background_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => cfg.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              cfg.accent_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ accent_color: value });
+            }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => {
+              cfg.text_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => cfg.card_color || defaultConfig.card_color,
+            set: (value) => {
+              cfg.card_color = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ card_color: value });
+            }
+          },
+          {
+            get: () => cfg.secondary_text || defaultConfig.secondary_text,
+            set: (value) => {
+              cfg.secondary_text = value;
+              if (window.elementSdk) window.elementSdk.setConfig({ secondary_text: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+    
+    // Map to edit panel values
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['main_slogan', cfg.main_slogan || defaultConfig.main_slogan],
+        ['ideology_text', cfg.ideology_text || defaultConfig.ideology_text],
+        ['telegram_handle', cfg.telegram_handle || defaultConfig.telegram_handle]
+      ]);
+    }
+    
+    // Initialize SDK and animations
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+    
+    // Initialize scroll animations when DOM is ready
+    document.addEventListener('DOMContentLoaded', initScrollAnimations);
+    
+    // Trigger initial animations for hero section
+    setTimeout(() => {
+      document.querySelectorAll('.fade-in').forEach((el, index) => {
+        if (el.closest('section')?.classList.contains('hero-geometric') || 
+            el.closest('section')?.style.background?.includes('#1B1FAF')) {
+          el.classList.add('visible');
+        }
+      });
+    }, 100);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c74abb3821ebc16',t:'MTc2OTk4MjY5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
